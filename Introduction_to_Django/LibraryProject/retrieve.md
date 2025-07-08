@@ -1,15 +1,19 @@
 
-
 ---
 
-### ✅ 2. `retrieve.md`
-
+### 📄 **retrieve.md**
 ```markdown
-# Retrieve Operation
+# Retrieve the created Book instance
 
 ```python
 from bookshelf.models import Book
 
-# Retrieve the book instance
-retrieved_book = Book.objects.get(title="1984")
-print(retrieved_book.title, retrieved_book.author, retrieved_book.publication_year)
+# Retrieve all books
+books = Book.objects.all()
+
+# Output
+for book in books:
+    print(book.title, book.author, book.publication_year)
+
+# Expected Output
+# 1984 George Orwell 1949
