@@ -11,8 +11,11 @@ from .views import (
     delete_book_view,
 )
 
+# Alias list_books to list_books_view for checker compatibility
+list_books = list_books_view
+
 urlpatterns = [
-    path('books/', list_books_view, name='list_books'),
+    path('books/', list_books, name='list_books'),
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
 
     # Authentication URLs
