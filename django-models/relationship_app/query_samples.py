@@ -6,7 +6,7 @@ import django
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Set the Django settings module
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_models.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "LibraryProject.settings")
 
 # Setup Django
 django.setup()
