@@ -6,13 +6,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Library, Book, UserProfile, Author
 
-# Function-based view to list all books
+# --- Book List View ---
 @login_required
 def list_books_view(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view for Library detail
+# --- Library Detail View ---
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
@@ -26,8 +26,8 @@ class LibraryDetailView(DetailView):
         context['books'] = self.object.books.all()
         return context
 
-# ALX checker-compatible user registration view
-def register(request):
+# --- Registration View ---
+def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -38,7 +38,14 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
 
-# Role-based dashboard
+# --- Login / Logout Views ---
+class CustomLoginView(LoginView):
+    template_name = 'relationship_app/login.html'
+
+class CustomLogoutView(LogoutView):
+    template_name = 'relationship_app/logout.html'
+
+# --- Dashboard View ---
 @login_required
 def dashboard_view(request):
     user_profile = getattr(request.user, 'userprofile', None)
@@ -51,7 +58,7 @@ def dashboard_view(request):
             return render(request, 'relationship_app/member_dashboard.html')
     return redirect('login')
 
-# Add a book
+# --- Add Book View ---
 @login_required
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book_view(request):
@@ -65,7 +72,7 @@ def add_book_view(request):
     authors = Author.objects.all()
     return render(request, 'relationship_app/add_book.html', {'authors': authors})
 
-# Edit a book
+# --- Edit Book View ---
 @login_required
 @permission_required('relationship_app.can_change_book', raise_exception=True)
 def edit_book_view(request, pk):
@@ -80,7 +87,7 @@ def edit_book_view(request, pk):
     authors = Author.objects.all()
     return render(request, 'relationship_app/edit_book.html', {'book': book, 'authors': authors})
 
-# Delete a book
+# --- Delete Book View ---
 @login_required
 @permission_required('relationship_app.can_delete_book', raise_exception=True)
 def delete_book_view(request, pk):
@@ -90,5 +97,5 @@ def delete_book_view(request, pk):
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book_confirm.html', {'book': book})
 
-# Alias for ALX checker compatibility
+# Alias for checker compatibility
 list_books = list_books_view
