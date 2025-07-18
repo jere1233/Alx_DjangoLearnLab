@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import Book, Library, UserProfile
+from .models import Library
+from .models import Book, UserProfile
 
 # Function-based view to list all books (simple list, uses Book.objects.all())
 @login_required
