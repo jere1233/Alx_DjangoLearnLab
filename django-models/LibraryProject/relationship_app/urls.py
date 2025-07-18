@@ -6,9 +6,9 @@ from .views import (
     CustomLoginView,
     CustomLogoutView,
     dashboard_view,
-    add_book_view,       # Add book view
-    edit_book_view,      # Edit book view
-    delete_book_view,    # Delete book view
+    add_book_view,
+    edit_book_view,
+    delete_book_view,
 )
 
 urlpatterns = [
