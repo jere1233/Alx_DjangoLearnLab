@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import Library
-from .models import Book, UserProfile
+from .models import Library, Book, UserProfile, Author  # Import Author here too
 
 # Function-based view to list all books (simple list, uses Book.objects.all())
 @login_required
@@ -71,11 +70,9 @@ def add_book_view(request):
         title = request.POST.get('title')
         author_id = request.POST.get('author')
         if title and author_id:
-            from .models import Author
             author = get_object_or_404(Author, id=author_id)
             Book.objects.create(title=title, author=author)
             return redirect('list_books')
-    from .models import Author
     authors = Author.objects.all()
     return render(request, 'relationship_app/add_book.html', {'authors': authors})
 
@@ -88,11 +85,9 @@ def edit_book_view(request, pk):
         book.title = request.POST.get('title')
         author_id = request.POST.get('author')
         if author_id:
-            from .models import Author
             book.author = get_object_or_404(Author, id=author_id)
         book.save()
         return redirect('list_books')
-    from .models import Author
     authors = Author.objects.all()
     return render(request, 'relationship_app/edit_book.html', {'book': book, 'authors': authors})
 
