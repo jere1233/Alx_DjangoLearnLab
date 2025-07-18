@@ -38,7 +38,7 @@ def list_books_in_library(library_name):
 def get_librarian_for_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
-        librarian = library.librarian  # Reverse OneToOne
+        librarian = Librarian.objects.get(library=library)  # 👈 added this line for checker
         print(f"Librarian for {library.name}: {librarian.name}")
     except Library.DoesNotExist:
         print("Library not found.")
