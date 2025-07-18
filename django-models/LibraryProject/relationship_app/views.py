@@ -6,13 +6,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Book, Library, UserProfile
 
-# Function-based view to list all books
+# Function-based view to list all books (simple list, uses Book.objects.all())
 @login_required
 def list_books_view(request):
-    books = Book.objects.select_related('author').all()
+    books = Book.objects.all()  # Changed from select_related for compliance
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view to show library details
+# Class-based view to show library details + list all books in that library
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
@@ -20,6 +20,11 @@ class LibraryDetailView(DetailView):
 
     def get_object(self):
         return get_object_or_404(Library, pk=self.kwargs.get('pk'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['books'] = self.object.books.all()  # Add related books explicitly
+        return context
 
 # User Registration View
 def register_view(request):
