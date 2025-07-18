@@ -1,0 +1,30 @@
+from django.urls import path
+from .views import (
+    list_books_view,
+    LibraryDetailView,
+    register_view,
+    CustomLoginView,
+    CustomLogoutView,
+    dashboard_view,
+    add_book_view,       # Add book view
+    edit_book_view,      # Edit book view
+    delete_book_view,    # Delete book view
+)
+
+urlpatterns = [
+    path('books/', list_books_view, name='list_books'),
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+
+    # Authentication URLs
+    path('register/', register_view, name='register'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', CustomLogoutView.as_view(), name='logout'),
+
+    # Role-based dashboard
+    path('dashboard/', dashboard_view, name='dashboard'),
+
+    # Book management URLs
+    path('books/add/', add_book_view, name='add_book'),
+    path('books/<int:pk>/edit/', edit_book_view, name='edit_book'),
+    path('books/<int:pk>/delete/', delete_book_view, name='delete_book'),
+]
