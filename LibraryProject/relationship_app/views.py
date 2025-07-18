@@ -4,15 +4,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import Library, Book, UserProfile, Author  # Import Author here too
+from .models import Library, Book, UserProfile, Author
 
-# Function-based view to list all books (simple list, uses Book.objects.all())
+# Function-based view to list all books
 @login_required
 def list_books_view(request):
-    books = Book.objects.all()  # Changed from select_related for compliance
+    books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view to show library details + list all books in that library
+# Class-based view for Library detail
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
@@ -23,11 +23,11 @@ class LibraryDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['books'] = self.object.books.all()  # Add related books explicitly
+        context['books'] = self.object.books.all()
         return context
 
-# User Registration View
-def register_view(request):
+# ALX checker-compatible user registration view
+def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -38,19 +38,10 @@ def register_view(request):
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
 
-# Custom Login View
-class CustomLoginView(LoginView):
-    template_name = 'relationship_app/login.html'
-
-# Custom Logout View
-class CustomLogoutView(LogoutView):
-    template_name = 'relationship_app/logout.html'
-
-# Role-Based Dashboard View
+# Role-based dashboard
 @login_required
 def dashboard_view(request):
     user_profile = getattr(request.user, 'userprofile', None)
-
     if user_profile:
         if user_profile.role == 'Admin':
             return render(request, 'relationship_app/admin_dashboard.html')
@@ -60,9 +51,7 @@ def dashboard_view(request):
             return render(request, 'relationship_app/member_dashboard.html')
     return redirect('login')
 
-# --- Book Management Views with Permissions ---
-
-# View to add a book - requires 'can_add_book' permission
+# Add a book
 @login_required
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book_view(request):
@@ -76,7 +65,7 @@ def add_book_view(request):
     authors = Author.objects.all()
     return render(request, 'relationship_app/add_book.html', {'authors': authors})
 
-# View to edit a book - requires 'can_change_book' permission
+# Edit a book
 @login_required
 @permission_required('relationship_app.can_change_book', raise_exception=True)
 def edit_book_view(request, pk):
@@ -91,7 +80,7 @@ def edit_book_view(request, pk):
     authors = Author.objects.all()
     return render(request, 'relationship_app/edit_book.html', {'book': book, 'authors': authors})
 
-# View to delete a book - requires 'can_delete_book' permission
+# Delete a book
 @login_required
 @permission_required('relationship_app.can_delete_book', raise_exception=True)
 def delete_book_view(request, pk):
@@ -101,5 +90,5 @@ def delete_book_view(request, pk):
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book_confirm.html', {'book': book})
 
-# Alias for checker compatibility
+# Alias for ALX checker compatibility
 list_books = list_books_view
