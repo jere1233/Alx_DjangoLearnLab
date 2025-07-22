@@ -96,6 +96,3 @@ def delete_book_view(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book_confirm.html', {'book': book})
-
-# Alias for checker compatibility
-list_books = list_books_view
