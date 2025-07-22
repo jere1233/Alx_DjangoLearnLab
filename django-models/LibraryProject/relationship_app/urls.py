@@ -1,7 +1,8 @@
 from django.urls import path
 from django.views.generic import RedirectView
+
+from .views import list_books
 from .views import (
-    list_books,  # ✅ now literal
     LibraryDetailView,
     register_view,
     CustomLoginView,
