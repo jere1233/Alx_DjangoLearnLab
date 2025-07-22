@@ -23,11 +23,12 @@ class Book(models.Model):
         return self.title
 
     class Meta:
-        permissions = [
-            ("canadd_book", "Can add book"),
-            ("canchange_book", "Can change book"),
-            ("candelete_book", "Can delete book"),
-        ]
+    permissions = [
+        ("can_add_book", "Can add book"),
+        ("can_change_book", "Can change book"),
+        ("can_delete_book", "Can delete book"),
+    ]
+
 
 # Library Model
 class Library(models.Model):
