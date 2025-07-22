@@ -21,6 +21,11 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
 
-    # Dashboard
+    # Dashboard (general redirect)
     path('dashboard/', views.dashboard_view, name='dashboard'),
+
+    # Role-based dashboards
+    path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('dashboard/librarian/', views.librarian_dashboard, name='librarian_dashboard'),
+    path('dashboard/member/', views.member_dashboard, name='member_dashboard'),
 ]
