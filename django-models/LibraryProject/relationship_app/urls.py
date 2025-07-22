@@ -1,7 +1,7 @@
 from django.urls import path
 from django.views.generic import RedirectView
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import register
+from . import views
 
 
 from .views import list_books
