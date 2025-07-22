@@ -7,13 +7,13 @@ urlpatterns = [
     # Redirect root to book list
     path('', RedirectView.as_view(pattern_name='list_books', permanent=False)),
 
-    # Book management
-    path('books/', views.list_books, name='list_books'),
-    path('books/add/', views.add_book_view, name='add_book'),
-    path('books/<int:pk>/edit/', views.edit_book_view, name='edit_book'),
-    path('books/<int:pk>/delete/', views.delete_book_view, name='delete_book'),
+    # Book management (Adjusted to match expected substrings)
+    path('add_book/', views.add_book_view, name='add_book'),
+    path('edit_book/<int:pk>/', views.edit_book_view, name='edit_book'),
+    path('delete_book/<int:pk>/', views.delete_book_view, name='delete_book'),
 
-    # Library detail
+    # Book listing and library details
+    path('books/', views.list_books, name='list_books'),
     path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
 
     # User Authentication
