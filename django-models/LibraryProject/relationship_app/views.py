@@ -17,14 +17,17 @@ def is_member(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
 # --- Role-based dashboard views ---
+@login_required
 @user_passes_test(is_admin)
 def admin_dashboard(request):
     return render(request, 'relationship_app/admin_dashboard.html')
 
+@login_required
 @user_passes_test(is_librarian)
 def librarian_dashboard(request):
     return render(request, 'relationship_app/librarian_dashboard.html')
 
+@login_required
 @user_passes_test(is_member)
 def member_dashboard(request):
     return render(request, 'relationship_app/member_dashboard.html')
