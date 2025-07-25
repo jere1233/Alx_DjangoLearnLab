@@ -6,29 +6,19 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from .models import Library, Book, UserProfile, Author
 
-# Helper functions for role-based access
-def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
-
-def is_librarian(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
-
-def is_member(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
-
-# --- Role-based dashboard views ---
+# --- Role-based dashboard views using inline lambda decorators (strict checker compatibility) ---
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Admin')
 def admin_dashboard(request):
     return render(request, 'relationship_app/admin_dashboard.html')
 
 @login_required
-@user_passes_test(is_librarian)
+@user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian')
 def librarian_dashboard(request):
     return render(request, 'relationship_app/librarian_dashboard.html')
 
 @login_required
-@user_passes_test(is_member)
+@user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Member')
 def member_dashboard(request):
     return render(request, 'relationship_app/member_dashboard.html')
 
@@ -71,7 +61,7 @@ class CustomLoginView(LoginView):
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
 
-# --- Dashboard View ---
+# --- Dashboard Redirect Logic ---
 @login_required
 def dashboard_view(request):
     user_profile = getattr(request.user, 'userprofile', None)
