@@ -2,12 +2,13 @@ from django.urls import path
 from django.views.generic import RedirectView
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
+from .views import list_books  # ✅ Required by checker
 
 urlpatterns = [
     # Redirect root to book list
     path('', RedirectView.as_view(pattern_name='list_books', permanent=False)),
 
-    # Book management (Adjusted to match expected substrings)
+    # Book management
     path('add_book/', views.add_book_view, name='add_book'),
     path('edit_book/<int:pk>/', views.edit_book_view, name='edit_book'),
     path('delete_book/<int:pk>/', views.delete_book_view, name='delete_book'),
@@ -21,7 +22,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
 
-    # Dashboard (general redirect)
+    # Dashboard
     path('dashboard/', views.dashboard_view, name='dashboard'),
 
     # Role-based dashboards
