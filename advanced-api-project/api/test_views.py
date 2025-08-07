@@ -8,7 +8,9 @@ from django.contrib.auth.models import User
 class BookAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.username = 'testuser'
+        self.password = 'testpass'
+        self.user = User.objects.create_user(username=self.username, password=self.password)
         self.author = Author.objects.create(name="Author A")
         self.book = Book.objects.create(title="Book A", publication_year=2020, author=self.author)
 
@@ -19,7 +21,8 @@ class BookAPITestCase(TestCase):
         self.assertIsInstance(response.data['results'], list)
 
     def test_create_book_authenticated(self):
-        self.client.force_authenticate(user=self.user)
+        login = self.client.login(username=self.username, password=self.password)
+        self.assertTrue(login, "Login failed in test_create_book_authenticated")
         response = self.client.post('/api/books/', {
             'title': 'Book B',
             'publication_year': 2022,
@@ -39,7 +42,8 @@ class BookAPITestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_book(self):
-        self.client.force_authenticate(user=self.user)
+        login = self.client.login(username=self.username, password=self.password)
+        self.assertTrue(login, "Login failed in test_update_book")
         response = self.client.put(f'/api/books/{self.book.id}/', {
             'title': 'Updated Book A',
             'publication_year': 2021,
@@ -51,6 +55,7 @@ class BookAPITestCase(TestCase):
         self.assertEqual(response.data['author'], self.author.id)
 
     def test_delete_book(self):
-        self.client.force_authenticate(user=self.user)
+        login = self.client.login(username=self.username, password=self.password)
+        self.assertTrue(login, "Login failed in test_delete_book")
         response = self.client.delete(f'/api/books/{self.book.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
