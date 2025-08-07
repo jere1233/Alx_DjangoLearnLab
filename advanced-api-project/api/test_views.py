@@ -1,4 +1,4 @@
-# test_views.py
+# api/test_views.py
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -15,6 +15,8 @@ class BookAPITestCase(TestCase):
     def test_list_books(self):
         response = self.client.get('/api/books/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('results', response.data)  # Assuming pagination or list response
+        self.assertIsInstance(response.data['results'], list)
 
     def test_create_book_authenticated(self):
         self.client.force_authenticate(user=self.user)
@@ -24,6 +26,9 @@ class BookAPITestCase(TestCase):
             'author': self.author.id
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['title'], 'Book B')
+        self.assertEqual(response.data['publication_year'], 2022)
+        self.assertEqual(response.data['author'], self.author.id)
 
     def test_create_book_unauthenticated(self):
         response = self.client.post('/api/books/', {
@@ -41,6 +46,9 @@ class BookAPITestCase(TestCase):
             'author': self.author.id
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'Updated Book A')
+        self.assertEqual(response.data['publication_year'], 2021)
+        self.assertEqual(response.data['author'], self.author.id)
 
     def test_delete_book(self):
         self.client.force_authenticate(user=self.user)
