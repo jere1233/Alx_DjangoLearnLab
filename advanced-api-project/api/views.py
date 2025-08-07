@@ -1,5 +1,6 @@
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters import rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
@@ -15,10 +16,8 @@ class BookListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
-        # For POST (create), user must be authenticated
         if self.request.method == 'POST':
             return [IsAuthenticated()]
-        # For GET (list), allow read-only access to anyone
         return [IsAuthenticatedOrReadOnly()]
 
 
@@ -28,14 +27,10 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
-        # For PUT, PATCH, DELETE require authentication
         if self.request.method in ['PUT', 'PATCH', 'DELETE']:
             return [IsAuthenticated()]
-        # For GET, allow read-only access to anyone
         return [IsAuthenticatedOrReadOnly()]
 
-
-# === Views required by the checker ===
 
 class ListView(generics.ListAPIView):
     queryset = Book.objects.all()
